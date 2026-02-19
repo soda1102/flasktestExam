@@ -1,0 +1,71 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="p-5 mb-4 bg-white rounded-3 shadow border-start border-5 border-warning">
+        <div class="container-fluid py-5">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-5 fw-bold text-dark">환영합니다!</h1>
+                    <p class="fs-4 text-muted">Spark Circle은 작은 아이디어를 모아 더 큰 가치를 만들어가는 소중한 공간입니다.</p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <img src="{{ url_for('static', filename='Spark_Circle_logo2.png') }}"
+                         alt="Spark Circle 로고"
+                         class="img-fluid"
+                         style="max-width: 250px; height: auto;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        {% if not session.get('user_id') %}
+            <div class="col-md-5">
+                <div class="card h-100 shadow-sm border-warning border-2 text-center">
+                    <div class="card-body py-5">
+                        <div class="mb-3">
+                            <i class="bi bi-person-circle" style="font-size: 3rem; color: #ffc107;"></i>
+                        </div>
+                        <h3 class="card-title fw-bold">기존 회원인가요?</h3>
+                        <p class="card-text text-muted">로그인하여 자유롭게 이용해보세요.</p>
+                        <a href="/login" class="btn btn-warning btn-lg px-5 fw-bold text-dark">로그인</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="card h-100 shadow-sm border-warning border-2 text-center">
+                    <div class="card-body py-5">
+                        <div class="mb-3">
+                            <i class="bi bi-person-plus-fill" style="font-size: 3rem; color: #ffc107;"></i>
+                        </div>
+                        <h3 class="card-title fw-bold">처음 방문하셨나요?</h3>
+                        <p class="card-text text-muted">회원가입을 통해 다양한 서비스를 이용해보세요.</p>
+                        <a href="/join" class="btn btn-outline-dark btn-lg px-5 fw-bold">회원가입</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-md-10">
+                <div class="card shadow-sm border-warning bg-warning bg-opacity-10">
+                    <div class="card-body p-5 text-center">
+                        <h3 class="fw-bold">{{ session['user_name'] }}님, 반갑습니다!</h3>
+                        <p>현재 <b>{{ session['user_role'] }}</b> 권한으로 접속 중입니다.</p>
+                        <div class="d-grid gap-2 d-md-block mt-4">
+                            <a href="/board" class="btn btn-dark px-4">자유게시판</a>
+                            {% if session.get('user_role') == 'user' %}
+                                <a href="/score/my" class="btn btn-warning px-4 fw-bold">내 성적 조회</a>
+                            {% else %}
+                                <a href="/score/list" class="btn btn-warning px-4 fw-bold">전체 성적 관리</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+{% endblock %}

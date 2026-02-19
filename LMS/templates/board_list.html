@@ -1,0 +1,98 @@
+{% extends 'layout.html' %}
+{% block content %}
+<style>
+    .board-container { max-width: 1000px; margin: 0 auto; }
+    .page-title { font-size: 2rem; color: #4A90E2; margin-bottom: 30px; }
+
+    /* 테이블 스타일 강화 */
+    .custom-table { border-radius: 15px; overflow: hidden; background: white; }
+    .custom-table thead { background-color: #f8f9fa; border-bottom: 2px solid #eee; }
+    .custom-table th { padding: 20px 15px; font-size: 1.1rem; color: #666; }
+    .custom-table td { padding: 25px 15px; font-size: 1.15rem; vertical-align: middle; }
+
+    /* 제목 강조 */
+    .post-link {
+        text-decoration: none;
+        color: #333;
+        font-weight: 600;
+        transition: color 0.2s;
+        display: block;
+    }
+    .post-link:hover { color: #FFD93D; }
+
+    /* 작성자 뱃지 크게 */
+    .author-badge {
+        background-color: #EBF3FF;
+        color: #6C9BCF;
+        padding: 8px 15px;
+        border-radius: 50px;
+        font-size: 0.95rem;
+        font-weight: bold;
+    }
+
+    .btn-write {
+        padding: 12px 30px;
+        font-size: 1.1rem;
+        border-radius: 50px;
+        background-color: #FFD93D;
+        border: none;
+        color: #554400;
+        font-weight: bold;
+    }
+</style>
+
+<div class="container py-5 board-container">
+    <div class="d-flex justify-content-between align-items-end mb-4">
+        <div>
+            <h2 class="page-title fw-bold mb-0">✨ Spark Square</h2>
+            <p class="text-muted mb-0 mt-2" style="font-size: 1.1rem;">여러분의 반짝이는 생각을 공유해 주세요!</p>
+        </div>
+        <a href="/board/write" class="btn btn-write shadow-sm">글쓰기</a>
+    </div>
+
+    <div class="card shadow-lg border-0 custom-table">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr class="text-center">
+                        <th style="width: 10%">번호</th>
+                        <th style="width: 55%">제목</th>
+                        <th style="width: 20%">작성자</th>
+                        <th style="width: 15%">날짜</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for board in boards %}
+                    <tr class="text-center">
+                        <td class="text-muted">{{ board.id }}</td>
+                        <td class="text-start">
+                            <a href="/board/view/{{ board.id }}" class="post-link">
+                                {{ board.title }}
+                                {% if board.view_count > 50 %}
+                                    <span class="ms-2" title="인기글">🔥</span>
+                                {% endif %}
+                            </a>
+                        </td>
+                        <td>
+                            <span class="author-badge">
+                                {{ board.writer_name if board.writer_name else '알 수 없음' }}
+                            </span>
+                        </td>
+                        <td class="text-muted" style="font-size: 1rem;">
+                            {{ board.write_date.strftime('%m/%d') }}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5">
+                            <i class="bi bi-chat-dots-fill d-block mb-3" style="font-size: 3rem; color: #eee;"></i>
+                            <p class="text-muted">첫 번째 Spark의 주인공이 되어보세요!</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

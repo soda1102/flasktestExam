@@ -1,0 +1,93 @@
+{% extends 'layout.html' %}
+{% block content %}
+<style>
+    /* Spark Circle 로그인 테마 */
+    :root {
+        --spark-yellow: #FFD93D;
+        --spark-soft-yellow: #FFF9E5;
+        --circle-blue: #6C9BCF;
+    }
+
+    body { background-color: #F8F9FA; }
+
+    .login-card {
+        border: none;
+        border-radius: 25px;
+        overflow: hidden;
+    }
+
+    .login-header {
+        background-color: var(--spark-yellow);
+        padding: 30px;
+        text-align: center;
+    }
+
+    .btn-spark {
+        background-color: var(--spark-yellow);
+        border: none;
+        border-radius: 50px;
+        color: #554400;
+        font-weight: bold;
+        padding: 12px;
+        transition: all 0.3s;
+    }
+
+    .btn-spark:hover {
+        background-color: #f1ca2e;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 217, 61, 0.4);
+    }
+
+    .form-control {
+        border-radius: 12px;
+        border: 1px solid #eee;
+        padding: 12px;
+    }
+
+    .form-control:focus {
+        border-color: var(--spark-yellow);
+        box-shadow: 0 0 0 0.25 margin-bottom: 20px;rem rgba(255, 217, 61, 0.25);
+    }
+
+    .join-link {
+        color: var(--circle-blue);
+        font-weight: 500;
+    }
+</style>
+
+<div class="container mt-5 py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5 col-lg-4">
+            <div class="card login-card shadow-lg">
+                <div class="login-header">
+                    <h2 class="fw-bold mb-1">⚡ Spark Circle</h2>
+                    <p class="small mb-0 opacity-75">로그인하고 아이디어를 마음껏 뿜어내 보세요!</p>
+                </div>
+
+                <div class="card-body p-4 p-md-5 bg-white">
+                    <form action="/login" method="POST">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">아이디</label>
+                            <input type="text" name="uid" class="form-control" placeholder="아이디를 입력하세요" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">비밀번호</label>
+                            <input type="password" name="upw" class="form-control" placeholder="비밀번호를 입력하세요" required>
+                        </div>
+                        <button type="submit" class="btn btn-spark w-100 shadow-sm">로그인하기</button>
+                    </form>
+
+                    <div class="mt-4 text-center">
+                        <span class="text-muted small">아직 회원이 아니신가요?</span><br>
+                        <a href="/join" class="join-link text-decoration-none">회원가입 하러가기 <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="/" class="text-muted small text-decoration-none">← 메인 페이지로 돌아가기</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

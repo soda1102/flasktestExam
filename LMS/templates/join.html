@@ -1,0 +1,158 @@
+{% extends 'layout.html' %}
+{% block content %}
+<style>
+    :root {
+        --spark-yellow: #FFD93D;
+        --spark-soft-yellow: #FFF9E5;
+        --circle-blue: #6C9BCF;
+    }
+
+    .join-card {
+        border: none;
+        border-radius: 25px;
+        overflow: hidden;
+    }
+
+    .join-header {
+        background-color: var(--spark-yellow);
+        padding: 30px;
+        text-align: center;
+        color: #554400;
+    }
+
+    .btn-join {
+        background-color: var(--spark-yellow);
+        border: none;
+        border-radius: 50px;
+        color: #554400;
+        font-weight: bold;
+        padding: 12px;
+        transition: all 0.3s;
+    }
+
+    .btn-join:hover {
+        background-color: #f1ca2e;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 217, 61, 0.4);
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #555;
+        font-size: 0.9rem;
+    }
+
+    .form-control {
+        border-radius: 12px;
+        border: 1px solid #eee;
+        padding: 10px 15px;
+        background-color: #fafafa;
+    }
+
+    .form-control:focus {
+        background-color: #fff;
+        border-color: var(--spark-yellow);
+        box-shadow: 0 0 0 0.25rem rgba(255, 217, 61, 0.2);
+    }
+
+    .section-title {
+        font-size: 0.8rem;
+        color: var(--circle-blue);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card join-card shadow-lg">
+                <div class="join-header">
+                    <h2 class="fw-bold mb-1">Welcome!</h2>
+                    <p class="small mb-0 opacity-75">Spark Circle의 새로운 가족이 되어주세요</p>
+                </div>
+
+                <div class="card-body p-4 p-md-5 bg-white">
+                    <form action="/join" method="POST">
+                        
+                        <div class="section-title">계정 정보</div>
+                        <div class="mb-3">
+                            <label class="form-label">아이디</label>
+                            <input type="text" name="uid" class="form-control" placeholder="사용할 아이디 입력" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">비밀번호</label>
+                            <input type="password" name="password" class="form-control" placeholder="비밀번호 입력" required>
+                        </div>
+
+                        <div class="section-title">개인 정보</div>
+                        <div class="mb-3">
+                            <label class="form-label">닉네임(활동명)</label>
+                            <input type="text" name="nickname" class="form-control" placeholder="사용할 닉네임 입력" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">실명(본인확인용)</label>
+                            <input type="text" name="name" class="form-control" placeholder="실명 입력(필수)" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">생년월일(수정불가, 정확히 기입)</label>
+                            <div class="row g-2">
+                                <div class="col-4">
+                                    <input type="number" id="birth_year" name="birth_year" class="form-control"
+                                           placeholder="YYYY년" required min="1900"
+                                           max="{{ year_now }}">
+                                </div>
+                                <div class="col-4">
+                                    <input type="number" id="birth_month" name="birth_month" class="form-control"
+                                           placeholder="MM월" required min="1" max="12">
+                                </div>
+                                <div class="col-4">
+                                    <input type="number" id="birth_day" name="birth_day" class="form-control"
+                                           placeholder="DD일" required min="1" max="31">
+                                </div>
+                            </div>
+                            <div id="age_msg" class="mt-2" style="color: #666; font-size: 0.85rem;">
+                                만 14세 이상만 가입 가능합니다. (올해 기준 {{ year_now - 14 }}년생까지)
+                            </div>
+                        </div>
+
+                        <div class="section-title">연락처</div>
+                        <div class="mb-3">
+                            <label class="form-label">이메일</label>
+                            <input type="email" name="email" class="form-control" placeholder="example@spark.com" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">휴대폰 번호</label>
+                            <div class="d-flex align-items-center gap-2">
+                                <input type="text" name="phone1" class="form-control text-center" value="010" readonly style="width: 80px; background-color: #eee;">
+                                <span>-</span>
+                                <input type="text" name="phone2" class="form-control text-center"
+                                       pattern="\d{4}" maxlength="4" placeholder="0000"
+                                       oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
+                                <span>-</span>
+                                <input type="text" name="phone3" class="form-control text-center"
+                                       pattern="\d{4}" maxlength="4" placeholder="0000"
+                                       oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
+                            </div>
+                            <small class="text-muted mt-1 d-block" style="font-size: 0.75rem;">숫자 4자리를 각각 입력해주세요.</small>
+                        </div>
+
+                        <button type="submit" class="btn btn-join w-100 shadow-sm mt-2">가입 완료</button>
+                    </form>
+
+                    <div class="mt-4 text-center">
+                        <a href="/login" class="text-decoration-none small text-muted">이미 계정이 있으신가요? <span style="color:var(--circle-blue); font-weight:bold;">로그인</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

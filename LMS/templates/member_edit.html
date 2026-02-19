@@ -1,0 +1,137 @@
+{% extends 'layout.html' %}
+{% block content %}
+<style>
+    :root {
+        --spark-yellow: #FFD93D;
+        --spark-soft-yellow: #FFF9E5;
+        --circle-blue: #6C9BCF;
+    }
+
+    .edit-card {
+        border: none;
+        border-radius: 25px;
+        overflow: hidden;
+    }
+
+    .edit-header {
+        background-color: var(--spark-yellow);
+        padding: 30px;
+        text-align: center;
+        color: #554400;
+    }
+
+    .btn-save {
+        background-color: var(--spark-yellow);
+        border: none;
+        border-radius: 50px;
+        color: #554400;
+        font-weight: bold;
+        padding: 12px;
+        transition: all 0.3s;
+    }
+
+    .btn-save:hover {
+        background-color: #f1ca2e;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 217, 61, 0.4);
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #555;
+        font-size: 0.9rem;
+    }
+
+    .form-control {
+        border-radius: 12px;
+        border: 1px solid #eee;
+        padding: 10px 15px;
+    }
+
+    .form-control:focus {
+        border-color: var(--spark-yellow);
+        box-shadow: 0 0 0 0.25rem rgba(255, 217, 61, 0.2);
+    }
+
+    .readonly-field {
+        background-color: #f8f9fa;
+        color: #999;
+    }
+
+    .section-title {
+        font-size: 0.8rem;
+        color: var(--circle-blue);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card edit-card shadow-lg">
+                <div class="edit-header">
+                    <h2 class="fw-bold mb-1">My Page</h2>
+                    <p class="small mb-0 opacity-75">소중한 정보를 안전하게 관리하세요!</p>
+                </div>
+
+                <div class="card-body p-4 p-md-5 bg-white">
+                    <form action="/member/edit" method="POST">
+                        
+                        <div class="section-title">기본 정보</div>
+                        <div class="mb-3">
+                            <label class="form-label">아이디 (변경 불가)</label>
+                            <input type="text" class="form-control readonly-field" value="{{ user.uid }}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">이름</label>
+                            <input type="text" name="name" class="form-control" value="{{ user.name }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">닉네임 (변경 불가)</label>
+                            <input type="text" name="nickname" class="form-control" value="{{ user.nickname }}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">생년월일 (변경 불가)</label>
+                            <input type="text" name="birth_date" class="form-control"
+                                   value="{{ user.birth_date.strftime('%Y-%m-%d') if user.birth_date.strftime else user.birth_date }}"
+                                   readonly style="background-color: #f8f9fa;">
+                        </div>
+
+                        <div class="section-title">보안 및 연락처</div>
+                        <div class="mb-3">
+                            <label class="form-label">새 비밀번호</label>
+                            <input type="password" name="password" class="form-control" placeholder="변경 시에만 입력">
+                            <small class="text-danger" style="font-size: 0.75rem;">* 비워두면 기존 비밀번호가 유지됩니다.</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">이메일 주소</label>
+                            <input type="email" name="email" class="form-control" value="{{ user.email }}">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">휴대폰 번호</label>
+                            <div class="d-flex align-items-center gap-2">
+                                <input type="text" name="phone1" class="form-control text-center readonly-field" value="010" readonly style="width: 80px;">
+                                <span>-</span>
+                                <input type="text" name="phone2" class="form-control text-center" pattern="\d{4}" maxlength="4" placeholder="0000" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                <span>-</span>
+                                <input type="text" name="phone3" class="form-control text-center" pattern="\d{4}" maxlength="4" placeholder="0000" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-save shadow-sm">수정 완료</button>
+                            <a href="/mypage" class="btn btn-outline-secondary border-0 rounded-pill">취소하기</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

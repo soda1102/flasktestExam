@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>종합 관리 시스템</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* 1. 기본 배경 및 폰트 설정 */
+        body {
+            padding-top: 80px;
+            background-color: #fffdf0; /* 아주 연한 노란색 배경 */
+        }
+
+        /* 2. 네비게이션 바 커스텀 스타일 */
+        .navbar-custom {
+            background-color: #FFE04D; /* 부트스트랩 warning(노란색) 색상 */
+            border-bottom: 3px solid #E6A12E;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* 3. 브랜드명 및 메뉴 글자색 (가독성을 위해 어두운 색 유지) */
+        .navbar-custom .navbar-brand,
+        .navbar-custom .nav-link {
+            color: #333333 !important;
+            font-weight: 600;
+        }
+
+        .navbar-custom .nav-link:hover {
+            color: #000 !important;
+        }
+
+        /* 4. 드롭다운 스타일 수정 */
+        .dropdown-menu {
+            border-top: 3px solid #ffc107;
+        }
+
+        /* 5. 버튼 및 포인트 컬러 (필요 시 block content 내부에서 사용) */
+        .btn-primary {
+            background-color: #ffc107;
+            border-color: #e0a800;
+            color: #212529;
+        }
+        .btn-primary:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+            color: #212529;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light navbar-custom fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+              <img src="/static/idea_black_backno.png" alt="Spark Circle 로고2" width="30" height="30" class="d-inline-block align-text-top me-2">
+              Spark Circle
+          </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/board/list">자유게시판</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/filesboard">자료실</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="scoreDropdown" role="button" data-bs-toggle="dropdown">
+                            성적관리
+                        </a>
+                        <ul class="dropdown-menu shadow">
+                            {% if session.get('user_role') == 'user' %}
+                                <li><a class="dropdown-item" href="/score/my">내 성적 조회</a></li>
+                            {% endif %}
+
+                            {% if session.get('user_role') in ('admin', 'manager') %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li><h6 class="dropdown-header">관리자 메뉴</h6></li>
+                                <li><a class="dropdown-item" href="/score/members">학생 성적 입력</a></li>
+                                <li><a class="dropdown-item" href="/score/list">전체 성적 현황</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {% if session.get('user_id') %}
+                        <li class="nav-item">
+                            <span class="nav-link text-dark"><b>{{ session['user_name'] }} | {{ session['user_role']}}</b>님</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/mypage">마이페이지</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">로그아웃</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login">👤로그인</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/join">👥회원가입</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
