@@ -292,86 +292,86 @@ def board_list():
     finally:
         conn.close()
 
-# #2. 게시글 자세히보기
-# @app.route('/board/view/<int:board_id>')  #http://localhost:5000/board/view/99(게시물번호)
-# def board_view(board_id):
-#     conn = Session.get_connection()
-#
-#     try:
-#         with conn.cursor() as cursor:
-#             #JOIN을 통해 작성자 정보(name, uid)를 함께 조회
-#             sql = "SELECT b.*, m.name as writer_name, m.uid as writer_uid FROM boards b JOIN members m ON b.member_id = m.id WHERE b.id = %s"
-#             cursor.execute(sql, (board_id,))
-#             row = cursor.fetchone()
-#
-#             if not row:
-#                 return "<script>alert('존재하지 않은 게시글 입니다.');history.back();</script>"
-#
-#             #Board 객체로 변환(앞서 작성한 Board.py의 from_db활용)
-#             board = Board.from_db(row)
-#             return render_template('board_view.html', board=board)
-#
-#     finally:
-#         conn.close()
-#
-# #3. 게시글 자세히보기
-# @app.route('/board/edit/<int:board_id>', methods=['GET', 'POST'])
-# def board_edit(board_id):
-#     conn = Session.get_connection()
-#     try:
-#         with conn.cursor() as cursor:
-#             #1.화면 보여주기(기존 데이터 로드)
-#             if request.method == 'GET':
-#                 sql = "SELECT * FROM boards WHERE id = %s"
-#                 cursor.execute(sql, (board_id,))
-#                 row = cursor.fetchone()
-#
-#                 if not row:
-#                     return "<script>alert('존재하지 않은 게시글 입니다.');history.back();</script>"
-#
-#                 #본인 확인 로직(필요시 추가)
-#                 if row['member_id'] != session.get('user_id'):
-#                     return "<script>alert('수정 권한이 없습니다..');history.back();</script>"
-#                 print(row)  #콘솔에 테스트 출력용, 없어두댐
-#                 board = Board.from_db(row)
-#                 return render_template('board_edit.html', board=board)
-#
-#             #2. 실제 DB 업데이트 처리
-#             elif request.method == 'POST':
-#                 title = request.form.get('title')
-#                 content = request.form.get('content')
-#
-#                 sql = "UPDATE boards SET title=%s, content=%s WHERE id=%s"
-#                 cursor.execute(sql, (title, content, board_id))
-#                 conn.commit()
-#                 return redirect(url_for('board_view', board_id=board_id))
-#
-#     finally:
-#         conn.close()
-#
-# #3. 게시글 삭제
-# @app.route('/board/delete/<int:board_id>')
-# def board_delete(board_id):
-#     conn = Session.get_connection()
-#     try:
-#         with conn.cursor() as cursor:
-#             sql = "DELETE FROM boards WHERE id = %s"  #저장된 테이블면 boards 사용
-#             cursor.execute(sql, (board_id,))
-#             conn.commit()
-#
-#             if cursor.rowcount > 0:
-#                 print(f"{board_id}번 게시글 삭제 성공")
-#             else:
-#                 return "<script>alert('삭제할 게시글이 없거나 권한이 없습니다.');history.back();</script>"
-#
-#         return redirect(url_for('board_list'))
-#
-#     except Exception as e:
-#         print(f"삭제 에러 : {e}")
-#         return "삭제 중 오류가 발생했습니다."
-#
-#     finally:
-#         conn.close()
+#2. 게시글 자세히보기
+@app.route('/board/view/<int:board_id>')
+def board_view(board_id):
+    conn = Session.get_connection()
+
+    try:
+        with conn.cursor() as cursor:
+            #JOIN을 통해 작성자 정보(name, uid)를 함께 조회
+            sql = "SELECT b.*, m.nickname as writer_name, m.uid as writer_uid FROM boards b JOIN members m ON b.member_id = m.id WHERE b.id = %s"
+            cursor.execute(sql, (board_id,))
+            row = cursor.fetchone()
+
+            if not row:
+                return "<script>alert('존재하지 않는 게시글 입니다.');history.back();</script>"
+
+            #Board 객체로 변환(앞서 작성한 Board.py의 from_db활용)
+            board = Board.from_db(row)
+            return render_template('board_view.html', board=board)
+
+    finally:
+        conn.close()
+
+#3. 게시글 자세히보기
+@app.route('/board/edit/<int:board_id>', methods=['GET', 'POST'])
+def board_edit(board_id):
+    conn = Session.get_connection()
+    try:
+        with conn.cursor() as cursor:
+            #1.화면 보여주기(기존 데이터 로드)
+            if request.method == 'GET':
+                sql = "SELECT * FROM boards WHERE id = %s"
+                cursor.execute(sql, (board_id,))
+                row = cursor.fetchone()
+
+                if not row:
+                    return "<script>alert('존재하지 않은 게시글 입니다.');history.back();</script>"
+
+                #본인 확인 로직(필요시 추가)
+                if row['member_id'] != session.get('user_id'):
+                    return "<script>alert('수정 권한이 없습니다..');history.back();</script>"
+                print(row)  #콘솔에 테스트 출력용, 없어두댐
+                board = Board.from_db(row)
+                return render_template('board_edit.html', board=board)
+
+            #2. 실제 DB 업데이트 처리
+            elif request.method == 'POST':
+                title = request.form.get('title')
+                content = request.form.get('content')
+
+                sql = "UPDATE boards SET title=%s, content=%s WHERE id=%s"
+                cursor.execute(sql, (title, content, board_id))
+                conn.commit()
+                return redirect(url_for('board_view', board_id=board_id))
+
+    finally:
+        conn.close()
+
+#3. 게시글 삭제
+@app.route('/board/delete/<int:board_id>')
+def board_delete(board_id):
+    conn = Session.get_connection()
+    try:
+        with conn.cursor() as cursor:
+            sql = "DELETE FROM boards WHERE id = %s"  #저장된 테이블면 boards 사용
+            cursor.execute(sql, (board_id,))
+            conn.commit()
+
+            if cursor.rowcount > 0:
+                print(f"{board_id}번 게시글 삭제 성공")
+            else:
+                return "<script>alert('삭제할 게시글이 없거나 권한이 없습니다.');history.back();</script>"
+
+        return redirect(url_for('board_list'))
+
+    except Exception as e:
+        print(f"삭제 에러 : {e}")
+        return "삭제 중 오류가 발생했습니다."
+
+    finally:
+        conn.close()
 
 
 #=====================================================================================================================

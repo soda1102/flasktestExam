@@ -1,11 +1,12 @@
 class Board:
-    def __init__(self, id, title, content, member_id, active=True, writer_name=None, writer_uid=None, view_count=0, write_date=None):
+    def __init__(self, id, title, content, member_id, active=True, writer_name=None, writer_uid=None, view_count=0, like_count=0, write_date=None):
         self.id = id  # DB의 PK
         self.title = title
         self.content = content
         self.member_id = member_id  # 작성자의 고유 번호(FK)
         self.active = active  # 삭제 여부 (boolean 1/0)
         self.view_count = view_count
+        self.like_count = like_count
 
         # JOIN을 통해 가져올 추가 정보들 (선택 사항)
         self.writer_name = writer_name
@@ -25,6 +26,7 @@ class Board:
             # JOIN 쿼리 시 사용할 이름과 아이디
             writer_name=row.get('writer_name'),
             view_count=row.get('view_count', 0),
+            like_count=row.get('like_count', 0),
             write_date=row.get("write_date"),
             writer_uid=row.get('writer_uid')
         )
